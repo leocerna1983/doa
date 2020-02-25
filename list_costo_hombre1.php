@@ -122,7 +122,7 @@
 		</nav>	
 	
 	  <div class="content">
-	 	    <h2 style="margin-top:57px;">Horas Hombre por Proyecto</h2>
+	 	    <h2 style="margin-top:57px;">Horas Hombre por Proyecto 2</h2>
 			<hr/>
 			<form class="form-inline" method='GET' enctype='multipart/form-data'  id='formId'>
 				<div class="row">

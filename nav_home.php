@@ -100,7 +100,11 @@
 							</a>
 						</li>	
 						<li>
-							<a href=\"list_costo_hombre.php\">Horas Hombre por Proyecto
+							<a href=\"list_horas_trabajador1.php\">Horas Hombre por Trabajador (Modificacion)
+							</a>
+						</li>	
+						<li>
+							<a href=\"list_costo_hombre1.php\">Horas Hombre por Proyecto
 							</a>
 						</li>	
 						<li>
