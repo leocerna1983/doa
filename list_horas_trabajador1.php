@@ -407,7 +407,6 @@ where year(fecha_asignacion)=".$ano." and month(fecha_asignacion)<".$mes." and c
 group by idproyecto, controlhoras.idusuario, year(fecha_asignacion), month(fecha_asignacion)) tabla
 inner join proyectos on tabla.idproyecto = proyectos.idproyecto) tabla1;";							
 
-//echo $consulta;
 
 $Consulta1 = "delete from listhoratrabajador;";
 

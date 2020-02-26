@@ -413,26 +413,39 @@
 							$ano = $fecha[1]==0?date('Y'):$fecha[1];
 							$fechaaux = new DateTime("1-".$mes."-".$ano."");	
 							$meses = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-						    /*$consulta = "SELECT  usuarios.idusuario,  usuarios.nombres,  sum(ch.horas) as  horas , 	IFNULL(sm.sueldo, 0)  as sueldomesv
-								FROM controlhoras ch INNER JOIN proyectos pt  ON pt.idProyecto = ch.idProyecto
-								INNER JOIN usuarios ON usuarios.idusuario = ch.IDUSUARIO
-								left join sueldomes sm on usuarios.idusuario = sm.idUsuario
-									 			and sm.mesanio = '$filter'
-								WHERE 
-								ch.idproyecto = '$proyecto' and 
-								MONTH(ch.fecha_asignacion) = $mes AND YEAR(ch.fecha_asignacion) = $ano
-								GROUP BY  usuarios.idusuario, usuarios.nombres, sueldomesv
-								HAVING sum(ch.horas)>0
-								ORDER BY pt.nombre ASC";*/
-								$consulta = "SELECT us.nombres,  sum(ch.horas) horas, IFNULL(sm.sueldo, 0)  as sueldomesv, ifnull( sum(case when pt.idProyecto = '$proyecto' then ch.horas end), 0) horasproyecto
-									FROM usuarios us
-									left JOIN controlhoras ch ON us.idUsuario =  ch.idUsuario
-									left JOIN proyectos pt  ON pt.idProyecto = ch.idProyecto
-									left join sueldomes sm on us.idusuario = sm.idUsuario
-									and sm.mesanio = '$filter'
-									WHERE MONTH(ch.fecha_asignacion) = $mes AND YEAR(ch.fecha_asignacion) =  $ano
-									group by us.nombres";		
-									//echo 			$consulta;						 					//echo $consulta;		
+						    
+							// $consulta = "SELECT us.nombres,  sum(ch.horas) horas, IFNULL(sm.sueldo, 0)  as sueldomesv, ifnull( sum(case when pt.idProyecto = '$proyecto' then ch.horas end), 0) horasproyecto
+							// 	FROM usuarios us
+							// 	left JOIN controlhoras ch ON us.idUsuario =  ch.idUsuario
+							// 	left JOIN proyectos pt  ON pt.idProyecto = ch.idProyecto
+							// 	left join sueldomes sm on us.idusuario = sm.idUsuario
+							// 	and sm.mesanio = '$filter'
+							// 	WHERE MONTH(ch.fecha_asignacion) = $mes AND YEAR(ch.fecha_asignacion) =  $ano
+							// 	group by us.nombres";		
+
+							$Cons1 = "delete from listcostohombre;";
+							$Cons2 = "INSERT INTO listcostohombre(idUsuario,Nombre,Horas,Porcentaje,Total,HorasAcumulada,PorcentajeAcumulada,TotalAcumulada)
+								select controlhoras.idusuario, u.nombres, round(sum(case when controlhoras.idproyecto = ".$proyecto." then horas else 0 end), 0) as horasproyecto,
+								0,round(sum(case when controlhoras.idproyecto = ".$proyecto." then horas else 0 end)*ifnull(sueldomes.sueldo, 0)/sum(horas), 0) as Monto,
+								0,0,0 from controlhoras 
+								inner join usuarios u on u.idusuario = controlhoras.idusuario
+								left join sueldomes on controlhoras.idusuario = sueldomes.idusuario and 
+								SUBSTRING_INDEX(mesanio,'-',1) = month(fecha_asignacion) and 
+								convert(SUBSTRING_INDEX(SUBSTRING_INDEX(mesanio,'-',2),'-',-1), unsigned integer)= year(fecha_asignacion)
+								where year(fecha_asignacion) = ".$ano." and month(fecha_asignacion)=".$mes."
+								group by controlhoras.idusuario,sueldomes.sueldo;";
+							$Cons3 = "INSERT INTO listcostohombre(idUsuario,Nombre,Horas,Porcentaje,Total,HorasAcumulada,PorcentajeAcumulada,TotalAcumulada)
+								select idusuario, nombres, 0 as Horas,0 as Porcentaje,0 as Total,sum(horasproyecto) as horasproyecto, 0 as PorcentajeAcumulada,  
+								sum(monto) as monto from (select controlhoras.idusuario, u.nombres, 0 as horas,0 as porcentaje,0 as total,   
+								round(sum(case when controlhoras.idproyecto = ".$proyecto." then horas else 0 end), 0) as horasproyecto, 0, 
+								round(sum(case when controlhoras.idproyecto = ".$proyecto." then horas else 0 end)*ifnull(sueldomes.sueldo, 0)/sum(horas), 0) as Monto 
+								from controlhoras  inner join usuarios u on u.idusuario = controlhoras.idusuario left join sueldomes 
+								on controlhoras.idusuario = sueldomes.idusuario and  SUBSTRING_INDEX(mesanio,'-',1) = month(fecha_asignacion) 
+								and  convert(SUBSTRING_INDEX(SUBSTRING_INDEX(mesanio,'-',2),'-',-1), unsigned integer)= year(fecha_asignacion) 
+								where year(fecha_asignacion) = ".$ano." and month(fecha_asignacion)<".$mes." 
+								group by controlhoras.idusuario,u.nombres,sueldomes.sueldo) as tabla group by idusuario, nombres;";
+							$Cons4 = "select idusuario, nombre, sum(horas) as horas, sum(porcentaje) as porcentaje, sum(		total) as total, sum(horasacumulada) as horasacumulada, sum(porcentajeacumulada) as porcentajeacumulada, sum(totalacumulada) as totalacumulada from listcostohombre 	group by idusuario, nombre;";
+
 					 		$sql = mysqli_query($con, $consulta);
 						$TotalMonto= 0;
 						if(mysqli_num_rows($sql) == 0){
