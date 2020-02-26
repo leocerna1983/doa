@@ -446,13 +446,70 @@
 								group by controlhoras.idusuario,u.nombres,sueldomes.sueldo) as tabla group by idusuario, nombres;";
 							$Cons4 = "select idusuario, nombre, sum(horas) as horas, sum(porcentaje) as porcentaje, sum(		total) as total, sum(horasacumulada) as horasacumulada, sum(porcentajeacumulada) as porcentajeacumulada, sum(totalacumulada) as totalacumulada from listcostohombre 	group by idusuario, nombre;";
 
-					 		$sql = mysqli_query($con, $consulta);
+					 		//$sql = mysqli_query($con, $consulta);
+					 		mysqli_query($con, $Cons1);
+					 		mysqli_query($con, $Cons2);
+					 		mysqli_query($con, $Cons3);					 		
+					 		$sql = mysqli_query($con, $Cons4);
 						$TotalMonto= 0;
 						if(mysqli_num_rows($sql) == 0){
 							echo '<tr><td colspan="8">No hay datos.</td></tr>';
 						}else{
+							echo "<div class=\"table-responsive\"> <table width=\"70%\" class=\"table-striped table-bordered table-hover\" data-page-length=\"20\">
+							<thead>
+								<tr>
+									<th colspan=\"1\"></th>
+									<th colspan=\"2\" style=\"text-align: center;\">Actual</th>
+									<th colspan=\"1\" style=\"padding: 4px;\"></th>
+									<th colspan=\"2\" style=\"text-align: center;\">Acumulado</th>
+								</tr>
+								<tr>
+									<th colspan=\"1\" >PROYECTO</th>
+									<th colspan=\"1\" >HORAS</th>";
 
+									if($idRol==2)
+										echo "<th colspan=\"1\" >TOTAL $</th><th colspan=\"1\" style=\"text-align: center;\"></th>";
+								echo "<th colspan=\"1\" >HORAS</th>";
+								if($idRol==2)
+										echo "<th colspan=\"1\" >TOTAL $</th>";
+								echo "	</tr></thead><tbody>";
+							$vPorcentaje = 0;
+							$vHoras = 0;
+							$vHorasAcum = 0;
+							$vTotal = 0;
+							$vTotalAcum = 0;
 							while ($row = mysqli_fetch_assoc($sql)) { 
+
+										$vHoras = $vHoras + $row['horas'];
+										$vHorasAcum = $vHorasAcum + $row['horasacumulada'];
+										$vTotal = $vTotal + $row['total'];
+										$vTotalAcum = $vTotalAcum + $row['totalacumulada'];
+										 	echo "<tr>
+							 			<th >".$row['nombre']."</th>
+							 			<td >".number_format($row['horas'], 0,",",".")."</td>";
+							 			//$vPorcentaje = $vPorcentaje + ($rows1[$x]['horas']*100/$totalHoras);
+							 			if($idRol==2)
+							 				echo "<td align=\"right\">$".number_format(($row['total']), 0,",",".")." </td>";
+							 			
+							 			echo "
+							 			<td > </td>
+							 			<td >".number_format($row['horasacumulada'], 0,",",".")."</td>";
+							 			if($idRol==2)
+							 				echo "<td align=\"right\">$".number_format(($row['totalacumulada']), 0,",",".")." </td>";
+							 echo "</tr>";
+									}
+									echo "<tr>
+							 <th >Total</th>
+							 <th >".number_format($vHoras, 0,",",".")."</th>
+							 <th style=\"text-align:right\">".number_format($vTotal, 0,",",".")."</th>
+							 	<th ></th>
+							 	<th >".number_format($vHorasAcum, 0,",",".")."</th>";
+							 	
+							 if($idRol==2)
+							 	echo "<th style=\"text-align:right\">$".number_format($vTotalAcum,0,",",".")." </th>";
+							 echo "</tr>";
+							 echo "</tbody></table></div>";
+							/*while ($row = mysqli_fetch_assoc($sql)) { 
 										$rows1[] = $row; 
 									} 									
 							$totalHoras = 0;
@@ -501,7 +558,7 @@
 							echo "<th style=\"text-align: right;\">$".number_format($TotalMonto,0,",",".")."</th>";
 							}	
 							echo "</tr>";
-							echo "</tbody></table></div>";
+							echo "</tbody></table></div>";*/
 					    	// $row = mysqli_fetch_assoc($sql);
 						}		
 					}		

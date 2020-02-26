@@ -488,12 +488,23 @@ sum(horasacumulada) as HorasAcumulada, sum(PorcentajeAcumulada) as PorcentajeAcu
 										echo "<th colspan=\"1\" >TOTAL $</th>";
 								echo "	</tr></thead><tbody>";
 							$vPorcentaje = 0;
+							$vHoras = 0;
+							$vTotal = 0;
+							$vHorasAcumu = 0;
+							$vPorcentajeAcumu = 0;
+							$vTotalAcumu = 0;
 							while ($row = mysqli_fetch_assoc($sql)) { 
 										 	echo "<tr>
 							 			<th >".$row['descproyecto']."</th>
 							 			<td >".number_format($row['horas'], 0,",",".")."</td>
 							 			<td >".number_format($row['porcentaje'], 2,",",".")."  %</td>";
 							 			//$vPorcentaje = $vPorcentaje + ($rows1[$x]['horas']*100/$totalHoras);
+							 			$vHoras = $vHoras + round($row['horas'], 0);
+							 			$vPorcentaje = $vPorcentaje + $row['porcentaje'];
+							 			$vHorasAcumu  = $vHorasAcumu + round($row['HorasAcumulada'], 0);
+							 			$vTotal = $vTotal + $row['total'];
+							 			$vPorcentajeAcumu = $vPorcentajeAcumu + $row['PorcentajeAcumulada'];
+							 			$vTotalAcumu = $vTotalAcumu + $row['totalacumulada'];
 							 			if($idRol==2)
 							 				echo "<td align=\"right\">$".number_format(($row['total']), 0,",",".")." </td>";
 							 			
@@ -516,14 +527,18 @@ sum(horasacumulada) as HorasAcumulada, sum(PorcentajeAcumulada) as PorcentajeAcu
 							// echo "</tr>";
 							// }
 							//$vPorcentaje = $vPorcentaje + 1.5;
-							// echo "<tr>
-							// <th >Total</th>
-							// <th >".number_format($totalHoras, 0,",",".")."</th>
-							// <th >".number_format($vPorcentaje, 2,",",".")." %</th>";
-							// if($idRol==2)
-							// 	echo "<th style=\"text-align:right\">$".number_format($Sueldo,0,",",".")." </th>";
-							// echo "</tr>";
-							// echo "</tbody></table></div>";
+							 echo "<tr>
+							 <th >Total</th>
+							 <th >".number_format($vHoras, 0,",",".")."</th>
+							 <th >".number_format($vPorcentaje, 0,",",".")." %</th><th style=\"text-align:right\">".number_format($vTotal, 0,",",".")."</th>
+							 	<th ></th>
+							 	<th >".number_format($vHorasAcumu, 0,",",".")."</th>
+							 	<th >".number_format($vPorcentajeAcumu, 0,",",".")." %</th>";
+							 	
+							 if($idRol==2)
+							 	echo "<th style=\"text-align:right\">$".number_format($vTotalAcumu,0,",",".")." </th>";
+							 echo "</tr>";
+							 echo "</tbody></table></div>";
 					    	// $row = mysqli_fetch_assoc($sql);
 						}		
 					}		
