@@ -78,9 +78,9 @@ session_start();
 			?>
 			<form class="form-horizontal" action="" method="post">
 				<div class="form-group">
-					<label class="col-sm-3 control-label">Dias</label>
+					<label class="col-sm-3 control-label">Horas x día</label>
 					<div class="col-sm-4">
-						<input type="text" name="valordias"  value="<?php echo $row ['valordias']; ?>" class="form-control" placeholder="Dias" required>
+						<input type="text" name="valordias"  value="<?php echo $row ['valordias']; ?>" class="form-control" placeholder="Horas x día" required>
 					</div>
 				</div>			
 				<div class="form-group">
