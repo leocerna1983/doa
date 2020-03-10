@@ -98,21 +98,17 @@
 						<li>
 							<a href=\"list_horas_trabajador.php\">Horas Hombre por Trabajador
 							</a>
-						</li>	
-						<li>
-							<a href=\"list_horas_trabajador1.php\">Horas Hombre por Trabajador (Modificacion)
-							</a>
-						</li>	
+						</li>							
 						<li>
 							<a href=\"list_costo_hombre.php\">Horas Hombre por Proyecto
 							</a>
-						</li>	
-						<li>
-							<a href=\"list_costo_hombre1.php\">Horas Hombre por Proyecto (Modificacion)
-							</a>
-						</li>	
+						</li>							
 						<li>
 							<a href=\"list_Informe_Proyecto.php\">Resúmenes
+							</a>
+						</li>
+						<li>
+							<a href=\"list_Informe_Proyecto1.php\">Resúmenes (Modificacion)
 							</a>
 						</li>
 					</ul>
